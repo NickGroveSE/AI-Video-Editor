@@ -26,7 +26,7 @@ Transform your long-form videos into engaging short-form content with AI-powered
 
 The application uses a relational database to track processing jobs, generated clips, and analysis results:
 
-![Database Schema](misc/db_diagram.png)
+![Database Schema](misc/db_diagram_iter2.png)
 
 The database consists of three main tables:
 - **clip_jobs**: Manages processing jobs with user prompts, AI model configuration, and progress tracking
