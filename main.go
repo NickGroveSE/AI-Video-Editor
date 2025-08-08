@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/NickGroveSE/ai-video-editor/cmd"
+	"ai-video-editor/cmd"
 )
 
 func main() {
