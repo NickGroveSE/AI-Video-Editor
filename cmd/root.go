@@ -12,19 +12,25 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "marco",
-	Short: "A simple Marco Polo CLI game",
-	Long: `Marco Polo CLI is a fun command-line application that responds to your input.
+	Use:   "ai-editor",
+	Short: "AI-powered video editor for creating short clips from long content",
+	Long: `AI Video Editor is a CLI tool that uses artificial intelligence to analyze 
+long-form video content and extract engaging short clips based on your prompts.
 
-Say "marco" and get "polo" back, or try other fun interactions!
-
-This is a simple example to demonstrate CLI structure using Cobra.`,
-	Example: `  # Basic marco polo
-  marco say marco
+Features:
+- Speech-to-text transcription
+- AI-powered content analysis
+- Automatic clip extraction
+- Caption generation
+- Local processing (no cloud required)`,
+	Example: `  # Process a video and find funny moments
+  ai-editor process video.mp4 "find funny moments"
   
-  # With different options
-  marco say hello --loud
-  marco say marco --count 3`,
+  # Extract educational highlights with 30s clips
+  ai-editor process lecture.mp4 "educational highlights" --duration 30s
+  
+  # Configure your AI API key
+  ai-editor config set api-key sk-your-openai-key`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -39,7 +45,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Global flags
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.marco.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ai-editor.yaml)")
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolP("quiet", "q", false, "quiet mode (minimal output)")
 
@@ -56,10 +62,10 @@ func initConfig() {
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".marco" (without extension).
+		// Search config in home directory with name ".ai-editor" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".marco")
+		viper.SetConfigName(".ai-editor")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
