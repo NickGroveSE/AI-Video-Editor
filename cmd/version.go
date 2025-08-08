@@ -8,10 +8,8 @@ import (
 )
 
 var (
-	version   = "dev"
-	commit    = "none"
-	date      = "unknown"
-	builtBy   = "unknown"
+	version   = "0.1"
+	date      = "08/08/2025"
 )
 
 var versionCmd = &cobra.Command{
@@ -28,9 +26,7 @@ func init() {
 func runVersion(cmd *cobra.Command, args []string) {
 	fmt.Printf("AI Video Editor\n")
 	fmt.Printf("Version:    %s\n", version)
-	fmt.Printf("Commit:     %s\n", commit)
 	fmt.Printf("Built:      %s\n", date)
-	fmt.Printf("Built by:   %s\n", builtBy)
 	fmt.Printf("Go version: %s\n", runtime.Version())
 	fmt.Printf("OS/Arch:    %s/%s\n", runtime.GOOS, runtime.GOARCH)
 }
