@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"ai-video-editor/video"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -82,11 +84,11 @@ func runProcess(cmd *cobra.Command, args []string) error {
 
 	// TODO: Implement the actual processing pipeline
 	fmt.Println("🔄 Starting video processing...")
-	
+
 	// Placeholder for processing steps
 	steps := []string{
 		"Analyzing video metadata",
-		"Extracting audio track", 
+		"Extracting audio track",
 		"Performing speech-to-text transcription",
 		"Running AI content analysis",
 		"Identifying clip segments",
@@ -99,12 +101,16 @@ func runProcess(cmd *cobra.Command, args []string) error {
 		if !viper.GetBool("quiet") {
 			fmt.Printf("📋 Step %d/%d: %s...\n", i+1, len(steps), step)
 		}
-		
+
 		// Simulate processing time
 		time.Sleep(500 * time.Millisecond)
-		
+
 		if viper.GetBool("verbose") {
 			fmt.Printf("   ✅ %s completed\n", step)
+		}
+
+		if i == 0 {
+			video.Analyze(videoFile)
 		}
 	}
 
@@ -124,13 +130,13 @@ func validateVideoFile(filename string) error {
 	// Check file extension
 	ext := strings.ToLower(filepath.Ext(filename))
 	validExts := []string{".mp4", ".avi", ".mov", ".mkv", ".webm", ".flv"}
-	
+
 	for _, validExt := range validExts {
 		if ext == validExt {
 			return nil
 		}
 	}
 
-	return fmt.Errorf("unsupported file format: %s (supported: %s)", 
+	return fmt.Errorf("unsupported file format: %s (supported: %s)",
 		ext, strings.Join(validExts, ", "))
 }
