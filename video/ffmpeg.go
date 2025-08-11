@@ -1,42 +1,106 @@
 package video
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
-	"github.com/xfrr/goffmpeg/transcoder"
+	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
-func Analyze(filePath string) {
+func Analyze(inputPath string) {
 
-	fmt.Printf("Analyzing video: %s\n\n", filePath)
+	// Set FFprobe path using environment variable (correct approach for u2takey/ffmpeg-go)
+	os.Setenv("FFPROBE_PATH", "C:\\ffmpeg\\bin\\ffprobe.exe")
+	
+	// Also ensure PATH includes FFmpeg directory
+	currentPath := os.Getenv("PATH")
+	os.Setenv("PATH", "C:\\ffmpeg\\bin;"+currentPath)
+	
+	// Check if file path was provided as argument
+	if len(os.Args) < 2 {
+		log.Fatal("Usage: go run main.go <path-to-video-file>")
+	}
 
-	// Create transcoder instance
-	trans := new(transcoder.Transcoder)
+	filePath := os.Args[1]
 
-	// Initialize with input file (no output needed for info)
-	err := trans.Initialize(filePath, "")
+	fmt.Printf("📹 Analyzing video: %s\n\n", filePath)
+
+	// Use ffprobe to get video metadata
+	data, err := ffmpeg.Probe(inputPath)
 	if err != nil {
-		log.Fatalf("Error initializing transcoder: %v", err)
+		log.Fatalf("❌ Error probing video file: %v", err)
 	}
 
-	// Get the media file object
-	mediaFile := trans.MediaFile()
-	if mediaFile == nil {
-		log.Fatal("Could not get media file information")
+	fmt.Println("✅ Successfully probed video file!")
+
+	// Parse the JSON response
+	type ProbeData struct {
+		Format struct {
+			Filename       string `json:"filename"`
+			FormatName     string `json:"format_name"`
+			FormatLongName string `json:"format_long_name"`
+			Duration       string `json:"duration"`
+			Size           string `json:"size"`
+			BitRate        string `json:"bit_rate"`
+		} `json:"format"`
+		Streams []struct {
+			Index              int    `json:"index"`
+			CodecName          string `json:"codec_name"`
+			CodecLongName      string `json:"codec_long_name"`
+			CodecType          string `json:"codec_type"`
+			Width              int    `json:"width"`
+			Height             int    `json:"height"`
+			PixelFormat        string `json:"pix_fmt"`
+			Duration           string `json:"duration"`
+			BitRate            string `json:"bit_rate"`
+			SampleRate         string `json:"sample_rate"`
+			Channels           int    `json:"channels"`
+		} `json:"streams"`
 	}
 
-	fmt.Println("✅ Successfully loaded video file!")
+	var probeData ProbeData
+	err = json.Unmarshal([]byte(data), &probeData)
+	if err != nil {
+		log.Fatalf("❌ Error parsing probe data: %v", err)
+	}
 
-	// Try to get available information using the wrapper
-	// Note: Different versions of goffmpeg may have different available methods
-	fmt.Printf("Input file: %s\n", filePath)
+	// Print basic file information
+	fmt.Println("📊 File Information:")
+	fmt.Printf("   Filename: %s\n", probeData.Format.Filename)
+	fmt.Printf("   Format: %s (%s)\n", probeData.Format.FormatName, probeData.Format.FormatLongName)
+	fmt.Printf("   Duration: %s seconds\n", probeData.Format.Duration)
+	fmt.Printf("   Size: %s bytes\n", probeData.Format.Size)
+	fmt.Printf("   Bit Rate: %s bps\n", probeData.Format.BitRate)
 
-	// Check if we can get basic file info
-	fmt.Println(mediaFile.Duration())
+	// Print stream information
+	fmt.Printf("\n🎬 Streams (%d total):\n", len(probeData.Streams))
+	
+	for i, stream := range probeData.Streams {
+		fmt.Printf("\n   Stream %d (%s):\n", i, stream.CodecType)
+		fmt.Printf("      Codec: %s (%s)\n", stream.CodecName, stream.CodecLongName)
+		
+		if stream.CodecType == "video" {
+			fmt.Printf("      Resolution: %dx%d\n", stream.Width, stream.Height)
+			if stream.PixelFormat != "" {
+				fmt.Printf("      Pixel Format: %s\n", stream.PixelFormat)
+			}
+		}
+		
+		if stream.CodecType == "audio" {
+			fmt.Printf("      Sample Rate: %s Hz\n", stream.SampleRate)
+			fmt.Printf("      Channels: %d\n", stream.Channels)
+		}
+		
+		if stream.Duration != "" {
+			fmt.Printf("      Duration: %s seconds\n", stream.Duration)
+		}
+		if stream.BitRate != "" {
+			fmt.Printf("      Bit Rate: %s bps\n", stream.BitRate)
+		}
+	}
 
-	// The wrapper is working if we get here without errors
-	fmt.Println("🎯 goffmpeg wrapper is functioning correctly!")
-	fmt.Println("\nNote: For detailed metadata, the wrapper may need additional")
-	fmt.Println("configuration or different methods depending on the version.")
+	fmt.Println("\n🎉 Analysis complete!")
+	fmt.Println("💡 u2takey/ffmpeg-go wrapper is working correctly!")
 }

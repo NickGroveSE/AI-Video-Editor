@@ -13,13 +13,13 @@ func main() {
 Test Commands
 
 -- Basic usage
-ai-editor process video.mp4 "find funny moments"
+go run main.go process local/cooking_test_video.mp4 "find funny moments"
 
 -- Advanced options
-ai-editor process video.mp4 "educational highlights" --duration 30s --output ./clips --quality high
+go run main.go process local/cooking_test_.mp4 "educational highlights" --duration 30s --output ./clips --quality high
 
 -- Configuration
-ai-editor config set-api-key openai sk-xxx
-ai-editor config set whisper-model large
+go run main.go config set-api-key openai sk-xxx
+go run main.go config set whisper-model large
 
 */
