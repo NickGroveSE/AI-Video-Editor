@@ -138,11 +138,7 @@ func runConfigList(cmd *cobra.Command, args []string) error {
 	fmt.Println()
 
 	settings := map[string]string{
-		"api-key":          viper.GetString("api-key"),
-		"whisper-model":    viper.GetString("whisper-model"),
-		"default-duration": viper.GetString("default-duration"),
-		"default-quality":  viper.GetString("default-quality"),
-		"temp-dir":         viper.GetString("temp-dir"),
+		"hugging-face-api-key":          viper.GetString("api-key"),
 	}
 
 	for key, value := range settings {

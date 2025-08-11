@@ -1,3 +1,5 @@
+github.com/Kardbord/hfapigo/v3 v3.1.0 h1:IngWVyYqwYPHNB2qqBjtKFTzpjFenXpIa/9wQboK+NQ=
+github.com/Kardbord/hfapigo/v3 v3.1.0/go.mod h1:Etti9fKY9ioeDTGd+A1CTHDb6EkPAWghSkilbTIaK3I=
 github.com/aws/aws-sdk-go v1.38.20 h1:QbzNx/tdfATbdKfubBpkt84OM6oBkxQZRw6+bW2GyeA=
 github.com/aws/aws-sdk-go v1.38.20/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=

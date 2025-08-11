@@ -1,10 +1,36 @@
 package main
 
 import (
+	"fmt"
+    "os"
+    "path/filepath"
+    
+    "github.com/spf13/viper"
 	"ai-video-editor/cmd"
 )
 
 func main() {
+	// Set config file name and path
+    home, err := os.UserHomeDir()
+    if err != nil {
+        fmt.Println("Error getting home directory:", err)
+        os.Exit(1)
+    }
+    
+    viper.SetConfigFile(filepath.Join(home, ".ai-editor.yaml"))
+    viper.SetConfigType("yaml")
+    
+    // Read the config file
+    if err := viper.ReadInConfig(); err != nil {
+        if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+            // Config file not found; ignore error
+            fmt.Println("No config file found, using defaults")
+        } else {
+            // Config file was found but another error was produced
+            fmt.Printf("Error reading config file: %v\n", err)
+        }
+    }
+
 	cmd.Execute()
 }
 
