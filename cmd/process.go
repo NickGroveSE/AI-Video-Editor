@@ -5,9 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
-
-	"ai-video-editor/video"
+	"ai-video-editor/processing/video"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -86,37 +84,37 @@ func runProcess(cmd *cobra.Command, args []string) error {
 	fmt.Println("🔄 Starting video processing...")
 
 	// Placeholder for processing steps
-	steps := []string{
-		"Analyzing video metadata",
-		"Extracting audio track",
-		"Performing speech-to-text transcription",
-		"Running AI content analysis",
-		"Identifying clip segments",
-		"Extracting video clips",
-		"Generating captions",
-		"Finalizing output files",
-	}
+	// steps := []string{
+	// 	"Analyzing video metadata",
+	// 	"Extracting audio track",
+	// 	"Performing speech-to-text transcription",
+	// 	"Running AI content analysis",
+	// 	"Identifying clip segments",
+	// 	"Extracting video clips",
+	// 	"Generating captions",
+	// 	"Finalizing output files",
+	// }
 
-	for i, step := range steps {
-		if !viper.GetBool("quiet") {
-			fmt.Printf("📋 Step %d/%d: %s...\n", i+1, len(steps), step)
-		}
+	// for i, step := range steps {
+	// 	if !viper.GetBool("quiet") {
+	// 		fmt.Printf("📋 Step %d/%d: %s...\n", i+1, len(steps), step)
+	// 	}
 
-		// Simulate processing time
-		time.Sleep(500 * time.Millisecond)
+	// 	// Simulate processing time
+	// 	time.Sleep(500 * time.Millisecond)
 
-		if viper.GetBool("verbose") {
-			fmt.Printf("   ✅ %s completed\n", step)
-		}
+	// 	if viper.GetBool("verbose") {
+	// 		fmt.Printf("   ✅ %s completed\n", step)
+	// 	}
 
-		if i == 0 {
-			video.Analyze(videoFile)
-		}
-	}
+	// 	if i == 0 {
+	video.Analyze(videoFile)
+	// 	}
+	// }
 
-	if !viper.GetBool("quiet") {
-		fmt.Printf("\n🎉 Processing complete! Generated clips saved to: %s\n", outputDir)
-	}
+	// if !viper.GetBool("quiet") {
+	// 	fmt.Printf("\n🎉 Processing complete! Generated clips saved to: %s\n", outputDir)
+	// }
 
 	return nil
 }

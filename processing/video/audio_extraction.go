@@ -1,4 +1,4 @@
-package main
+package video
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ func NewAudioExtractor(tempDir string) *AudioExtractor {
 }
 
 // ExtractAudio extracts audio from video and returns path to audio file
-func (ae *AudioExtractor) ExtractAudio(videoPath string) (string, error) {
+func (ae *AudioExtractor) ExtractAudioPath(videoPath string) (string, error) {
 	// Create unique temporary file name
 	timestamp := time.Now().Unix()
 	audioFileName := fmt.Sprintf("audio_%d.wav", timestamp)
@@ -53,6 +53,7 @@ func (ae *AudioExtractor) ExtractAudio(videoPath string) (string, error) {
 	return audioPath, nil
 }
 
+/*
 // ExtractAudioChunk extracts a specific time segment from video
 func (ae *AudioExtractor) ExtractAudioChunk(videoPath string, startTime, duration float64) (string, error) {
 	// Create unique temporary file name
@@ -87,7 +88,9 @@ func (ae *AudioExtractor) ExtractAudioChunk(videoPath string, startTime, duratio
 
 	return audioPath, nil
 }
+*/
 
+/*
 // GetAudioDuration gets the duration of the audio in the video
 func (ae *AudioExtractor) GetAudioDuration(videoPath string) (float64, error) {
 	// Use ffprobe to get duration
@@ -101,16 +104,18 @@ func (ae *AudioExtractor) GetAudioDuration(videoPath string) (float64, error) {
 	// This is a simplified version - you'd want proper JSON parsing
 	return 0, fmt.Errorf("duration parsing not implemented")
 }
+*/
 
 // CleanupAudioFile removes the temporary audio file
 func (ae *AudioExtractor) CleanupAudioFile(audioPath string) error {
 	return os.Remove(audioPath)
 }
 
+
 // ProcessVideoForHuggingFace extracts audio and prepares it for API
-func (ae *AudioExtractor) ProcessVideoForHuggingFace(videoPath string) ([]byte, string, error) {
+func (ae *AudioExtractor) ExtractBytes(videoPath string) ([]byte, string, error) {
 	// Extract audio to temporary file
-	audioPath, err := ae.ExtractAudio(videoPath)
+	audioPath, err := ae.ExtractAudioPath(videoPath)
 	if err != nil {
 		return nil, "", fmt.Errorf("audio extraction failed: %w", err)
 	}
@@ -125,6 +130,7 @@ func (ae *AudioExtractor) ProcessVideoForHuggingFace(videoPath string) ([]byte, 
 	return audioBytes, audioPath, nil
 }
 
+/*
 // ProcessLongVideoInChunks processes video in chunks for long videos
 func (ae *AudioExtractor) ProcessLongVideoInChunks(videoPath string, chunkDuration float64) ([]AudioChunk, error) {
 	// First get total duration (you'd implement proper duration detection)
@@ -172,7 +178,9 @@ func (ae *AudioExtractor) ProcessLongVideoInChunks(videoPath string, chunkDurati
 
 	return chunks, nil
 }
+*/
 
+/*
 // AudioChunk represents a segment of audio from the video
 type AudioChunk struct {
 	AudioPath   string
@@ -181,13 +189,14 @@ type AudioChunk struct {
 	Duration    float64
 	ChunkIndex  int
 }
+*/
 
 // Example usage
-func main() {
+func ExtractAudio(inputPath string) {
 	extractor := NewAudioExtractor("./temp")
 	
 	// Simple extraction
-	audioBytes, audioPath, err := extractor.ProcessVideoForHuggingFace("./video.mp4")
+	audioBytes, audioPath, err := extractor.ExtractBytes(inputPath)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return

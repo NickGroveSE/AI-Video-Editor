@@ -1,7 +1,6 @@
 package video
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -28,11 +27,13 @@ func Analyze(inputPath string) {
 	fmt.Printf("📹 Analyzing video: %s\n\n", filePath)
 
 	// Use ffprobe to get video metadata
-	data, err := ffmpeg.Probe(inputPath)
+	_, err := ffmpeg.Probe(inputPath)
 	if err != nil {
 		log.Fatalf("❌ Error probing video file: %v", err)
 	}
+	ExtractAudio(inputPath)
 
+	/*
 	fmt.Println("✅ Successfully probed video file!")
 
 	// Parse the JSON response
@@ -103,4 +104,5 @@ func Analyze(inputPath string) {
 
 	fmt.Println("\n🎉 Analysis complete!")
 	fmt.Println("💡 u2takey/ffmpeg-go wrapper is working correctly!")
+	*/
 }
