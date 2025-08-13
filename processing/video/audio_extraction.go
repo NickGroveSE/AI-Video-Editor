@@ -22,7 +22,7 @@ func NewAudioExtractor(tempDir string) *AudioExtractor {
 }
 
 // ExtractAudio extracts audio from video and returns path to audio file
-func (ae *AudioExtractor) ExtractAudioPath(videoPath string) (string, error) {
+func (ae *AudioExtractor) ExtractAudioPath(inputPath string) (string, error) {
 	// Create unique temporary file name
 	timestamp := time.Now().Unix()
 	audioFileName := fmt.Sprintf("audio_%d.wav", timestamp)
@@ -34,7 +34,7 @@ func (ae *AudioExtractor) ExtractAudioPath(videoPath string) (string, error) {
 	}
 
 	// Extract audio using ffmpeg-go
-	err := ffmpeg.Input(videoPath).
+	err := ffmpeg.Input(inputPath).
 		Output(audioPath, ffmpeg.KwArgs{
 			"vn":       "",           // No video
 			"acodec":   "pcm_s16le",  // 16-bit PCM codec
@@ -113,7 +113,7 @@ func (ae *AudioExtractor) CleanupAudioFile(audioPath string) error {
 
 
 // ProcessVideoForHuggingFace extracts audio and prepares it for API
-func (ae *AudioExtractor) ExtractBytes(videoPath string) ([]byte, string, error) {
+func (ae *AudioExtractor) ExtractAudioBytes(videoPath string) ([]byte, string, error) {
 	// Extract audio to temporary file
 	audioPath, err := ae.ExtractAudioPath(videoPath)
 	if err != nil {
@@ -196,7 +196,7 @@ func ExtractAudio(inputPath string) {
 	extractor := NewAudioExtractor("./temp")
 	
 	// Simple extraction
-	audioBytes, audioPath, err := extractor.ExtractBytes(inputPath)
+	audioBytes, audioPath, err := extractor.ExtractAudioBytes(inputPath)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
@@ -204,6 +204,7 @@ func ExtractAudio(inputPath string) {
 	defer extractor.CleanupAudioFile(audioPath)
 
 	fmt.Printf("Extracted %d bytes of audio to %s\n", len(audioBytes), audioPath)
+
 	
 	// Now you can send audioBytes to your Hugging Face API client
 	// transcription := yourHuggingFaceClient.Transcribe(audioBytes)

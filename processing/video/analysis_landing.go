@@ -31,7 +31,9 @@ func Analyze(inputPath string) {
 	if err != nil {
 		log.Fatalf("❌ Error probing video file: %v", err)
 	}
+
 	ExtractAudio(inputPath)
+	ExtractVideo(inputPath)
 
 	/*
 	fmt.Println("✅ Successfully probed video file!")
